@@ -8,8 +8,28 @@
     <title>snake</title>
 </head>
 <body>
+<style>
+
+    canvas {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+    .container {
+        position: absolute;
+        width: 640px;
+        height: 640px;
+        left: 50%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+    }
+</style>
+    <div class="container">
         <canvas id = 'background'></canvas>
         <canvas id = 'objects'></canvas>
+    </div>
+
+
 
 <script src="main.js"></script>
 
