@@ -22,56 +22,88 @@ function drawMap() {
         }
     }
 }
-let snake =  [];
 
 
+class Block {
+    constructor(x,y){
+        this.x =x;
+        this.y =y;
+    }
+}
 
- for (let i=0; i< 30; i++) {
-     for (let j=0; j< 30; j++) {
-         snake.push( [[i],[j]]);
-     }
+let snake =  [new Block(15,14),new Block(15,15),new Block(15,16)];
+let food = getRandomBlock();
+let direction ='up';
+let gameOver = false;
+let CanPress = true;
+let speed = 150;
 
- }
+function moveSnake() {
+    switch (direction) {
+        case 'up':    snake.pop(); snake.unshift(new Block(snake[0].x,snake[0].y-1)) ; break;
+        case 'left':  snake.pop(); snake.unshift(new Block(snake[0].x-1,snake[0].y)) ; break;
+        case 'down':  snake.pop(); snake.unshift(new Block(snake[0].x,snake[0].y+1)) ; break;
+        case 'right': snake.pop(); snake.unshift(new Block(snake[0].x+1,snake[0].y)) ; break;
+    }
+}
 
-let food = [getRandomBlock()];
+function tryEat() {
+    for (let i =0; i< snake.length; i++) {
+        for (let i = 0; i < snake.length; i++) {
+            if (food.y === snake[i].y && food.x === snake[i].x) {
+                switch (direction) {
+                    case 'up':    snake.unshift(new Block(food.x,food.y-1)); break;
+                    case 'left':  snake.unshift(new Block(food.x-1,food.y)); break;
+                    case 'down':  snake.unshift(new Block(food.x,food.y+1)); break;
+                    case 'right': snake.unshift(new Block(food.x+1,food.y)); break;
+                }
 
+                food = getRandomBlock();
+            }
+        }
+    }
+}
 
+function crushTest() {
 
-// blocksArray.push([[getRandomBlock(0,31)],[getRandomBlock(0,31)]]);
-// blocksArray.push([[getRandomBlock(0,31)],[getRandomBlock(0,31)]]);
-// blocksArray.push([[getRandomBlock(0,31)],[getRandomBlock(0,31)]]);
-// blocksArray.push([[getRandomBlock(0,31)],[getRandomBlock(0,31)]]);
-// blocksArray.push([[getRandomBlock(0,31)],[getRandomBlock(0,31)]]);
-// blocksArray.push([[getRandomBlock(0,31)],[getRandomBlock(0,31)]]);
+    for (let i =0; i< snake.length;i++) {
+      if(snake[i].x < 32 && snake[i].y<32 && snake[i].x >= 0 && snake[i].y >= 0  ){
+          for (let j=1; j < snake.length;j++) {
+              if(j!== i && snake[j].y === snake[i].y && snake[j].x === snake[i].x) {
+                  gameOver = true;
+              }
+          }
+      }else {
+          gameOver = true;
+      }
 
+    }
+}
 
 function drawObjects () {
+    objectsCanvasCtx.clearRect(0,0,canvasWidth,canvasHeight);
     objectsCanvasCtx.fillStyle = "#bdbdbd";
-
     for (let i =0; i<snake.length; i++){
-        objectsCanvasCtx.fillRect(snake[i][0]*20+1, snake[i][1]*20+1, 18, 18);
+        objectsCanvasCtx.fillRect(snake[i].x*20+1, snake[i].y*20+1, 18, 18);
     }
-
-    objectsCanvasCtx.fillRect(food[0][0]*20+1, food[0][1]*20+1, 18, 18);
-
-
+    objectsCanvasCtx.fillRect(food.x*20+1, food.y*20+1, 18, 18);
 }
+
 
 function getRandomBlock() {
     let canSendFood;
-    let block;
+    let food;
     do {
         canSendFood = true;
-        block =[[getRandom(0,31)],[getRandom(0,31)]];
-        for (let i =0; i< snake.length;i++){
+        food = new Block(getRandom(0, 31), getRandom(0, 31));
 
-            if(block[0][0] === snake[i][0] && block[0][1] === snake[i][1] ) {
+        for (let i = 0; i < snake.length; i++) {
+            if (food.y === snake[i].y && food.x === snake[i].x  ) {
                 canSendFood = false;
-                console.log(block);
             }
         }
-    } while (!canSendFood) ;
-    return block;
+    }while (!canSendFood);
+    return food;
 
 }
 
@@ -79,6 +111,32 @@ function getRandom(min,max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function switchCanPress() {
+    CanPress = !CanPress;
+}
+
+function loop(){
+
+    moveSnake();
+    tryEat();
+    drawObjects ();
+    crushTest();
+    if(!gameOver)setTimeout(loop,speed);
+}
 
 drawMap();
-drawObjects ();
+setTimeout(loop,speed);
+
+
+document.addEventListener("keydown", function(event){
+   if(CanPress) {
+       switch (event.keyCode) {
+           case 87: if(direction !== 'down') direction = 'up'; break;
+           case 65: if(direction !== 'right') direction = 'left';  break;
+           case 83: if(direction !== 'up') direction = 'down'; break;
+           case 68: if(direction !== 'left') direction = 'right'; break;
+       }
+       switchCanPress();
+       setTimeout(switchCanPress,speed-speed/2);
+   }
+});
