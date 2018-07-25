@@ -75,11 +75,16 @@ function crushTest() {
           for (let j=1; j < snake.length;j++) {
               if(j!== i && snake[j].y === snake[i].y && snake[j].x === snake[i].x) {
                   gameOver = true;
+                  btnRestart.style.display = 'block';
+                  btnRestart.focus();
+
               }
           }
       }else {
           btnRestart.style.display = 'block';
+          btnRestart.focus();
           gameOver = true;
+
       }
 
     }
@@ -121,19 +126,25 @@ function switchCanPress() {
 }
 
 function loop(){
-
-
+    objectsCanvas.focus();
     tryEat();
     moveSnake();
-    drawObjects ();
     crushTest();
-    if(!gameOver)setTimeout(loop,speed);
+    if(!gameOver){
+        drawObjects ();
+        setTimeout(loop,speed);
+    }
+
+
+
 }
 
 drawMap();
 
 function start () {
+
     btnStart.style.display ='none';
+
     snake =  [new Block(15,14),new Block(15,15),new Block(15,16)];
      food = getRandomBlock();
      direction ='up';
@@ -157,6 +168,12 @@ document.addEventListener("keydown", function(event){
            case 65: if(direction !== 'right') direction = 'left';  break;
            case 83: if(direction !== 'up') direction = 'down'; break;
            case 68: if(direction !== 'left') direction = 'right'; break;
+
+           case 38: if(direction !== 'down') direction = 'up'; break;
+           case 37: if(direction !== 'right') direction = 'left';  break;
+           case 40: if(direction !== 'up') direction = 'down'; break;
+           case 39: if(direction !== 'left') direction = 'right'; break;
+
        }
        switchCanPress();
        setTimeout(switchCanPress,speed/1.4);
@@ -167,6 +184,10 @@ document.addEventListener("keydown", function(event){
 btnStart.onclick =  function () {
     start();
 };
+
+btnStart.focus();
+objectsCanvas.focus();
+
 btnRestart.onclick =  function () {
     restart();
 };

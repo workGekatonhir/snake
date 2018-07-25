@@ -37,7 +37,6 @@
         left: 50%;
         top: 50%;
         transform: translateX(-50%) translateY(-50%);
-        color: white;
         text-align: center;
     }
     .btn {
@@ -45,9 +44,16 @@
         height: 30px;
         background: #1e7979;;
         line-height: 1.8;
+        border: none;
+        color: white;
+
     }
     .btn:hover {
         background: #437777;
+    }
+    .btn:focus {
+        border: 0 !important;
+        padding: 0;
     }
     #start{
         display:block;
@@ -63,8 +69,8 @@
         <canvas id = 'background'></canvas>
         <canvas id = 'objects'></canvas>
         <div class="menu">
-            <div class="btn" id="start">Start</div>
-            <div class="btn" id="restart">Restart</div>
+            <button class="btn" id="start">Start</button>
+            <button class="btn" id="restart">Restart</button>
         </div>
     </div>
 
