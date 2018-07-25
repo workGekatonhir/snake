@@ -122,8 +122,9 @@ function switchCanPress() {
 
 function loop(){
 
-    moveSnake();
+
     tryEat();
+    moveSnake();
     drawObjects ();
     crushTest();
     if(!gameOver)setTimeout(loop,speed);
