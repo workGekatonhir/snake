@@ -12,6 +12,12 @@ let objectsCanvasCtx = objectsCanvas.getContext('2d');
     objectsCanvas.height = canvasHeight;
 
 
+let btnStart = document.getElementById('start');
+let btnRestart = document.getElementById('restart');
+
+
+
+
 function drawMap() {
     backgroundCanvasCtx.fillStyle = "#ececec";
     backgroundCanvasCtx.strokeStyle = "gray";
@@ -32,11 +38,8 @@ class Block {
 }
 
 let snake =  [new Block(15,14),new Block(15,15),new Block(15,16)];
-let food = getRandomBlock();
-let direction ='up';
-let gameOver = false;
-let CanPress = true;
-let speed = 150;
+let food,direction, gameOver, CanPress, speed, score;
+let scoreBLock = document.getElementsByClassName('score')[0];
 
 function moveSnake() {
     switch (direction) {
@@ -57,7 +60,8 @@ function tryEat() {
                     case 'down':  snake.unshift(new Block(food.x,food.y+1)); break;
                     case 'right': snake.unshift(new Block(food.x+1,food.y)); break;
                 }
-
+                score+=10;
+                scoreBLock.textContent = ''+score+'';
                 food = getRandomBlock();
             }
         }
@@ -74,6 +78,7 @@ function crushTest() {
               }
           }
       }else {
+          btnRestart.style.display = 'block';
           gameOver = true;
       }
 
@@ -125,8 +130,24 @@ function loop(){
 }
 
 drawMap();
-setTimeout(loop,speed);
 
+function start () {
+    btnStart.style.display ='none';
+    snake =  [new Block(15,14),new Block(15,15),new Block(15,16)];
+     food = getRandomBlock();
+     direction ='up';
+     gameOver = false;
+     CanPress = true;
+     speed = 150;
+     score =0;
+    scoreBLock.textContent = ''+score+'';
+    setTimeout(loop,speed);
+}
+
+function restart () {
+    btnRestart.style.display = 'none';
+    start();
+}
 
 document.addEventListener("keydown", function(event){
    if(CanPress) {
@@ -137,6 +158,14 @@ document.addEventListener("keydown", function(event){
            case 68: if(direction !== 'left') direction = 'right'; break;
        }
        switchCanPress();
-       setTimeout(switchCanPress,speed-speed/2);
+       setTimeout(switchCanPress,speed/1.4);
    }
 });
+
+
+btnStart.onclick =  function () {
+    start();
+};
+btnRestart.onclick =  function () {
+    restart();
+};

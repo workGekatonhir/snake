@@ -23,10 +23,49 @@
         top: 50%;
         transform: translateX(-50%) translateY(-50%);
     }
+    .score {
+        position: absolute;
+        right: 0;
+        top: -35px;
+        font-size: 30px;
+        color: darkgray;
+    }
+    .menu {
+        position: absolute;
+        width: 150px;
+        height: 30px;
+        left: 50%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        color: white;
+        text-align: center;
+    }
+    .btn {
+        width: 150px;
+        height: 30px;
+        background: #1e7979;;
+        line-height: 1.8;
+    }
+    .btn:hover {
+        background: #437777;
+    }
+    #start{
+        display:block;
+    }
+    #restart{
+        display: none;
+    }
+
 </style>
     <div class="container">
+
+        <div class="score">00</div>
         <canvas id = 'background'></canvas>
         <canvas id = 'objects'></canvas>
+        <div class="menu">
+            <div class="btn" id="start">Start</div>
+            <div class="btn" id="restart">Restart</div>
+        </div>
     </div>
 
 
